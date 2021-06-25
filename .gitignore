@@ -1,0 +1,8 @@
+client/node_modules
+server/node_modules
+client/dist
+client/.cache
+server/dist
+server/.cache
+server/.parcel-cache
+client/.parcel-cache
