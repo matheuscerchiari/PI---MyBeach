@@ -1,4 +1,4 @@
-import template from "./component.html";
+import template from "bundle-text:./component.html";
 import { HTMLXInput } from "../input/component";
 
 export class HTMLXForm extends HTMLElement {
