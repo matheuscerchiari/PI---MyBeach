@@ -1,11 +1,10 @@
-
 client/node_modules
+server/node_modules
 client/dist
 client/.cache
-client/.parcel-cache
-client/package-lock.json
-server/node_modules
 server/dist
 server/.cache
 server/.parcel-cache
+client/.parcel-cache
 server/package-lock.json
+client/package-lock.json

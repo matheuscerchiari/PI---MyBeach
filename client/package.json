@@ -1,10 +1,10 @@
 {
-  "name": "client",
-  "version": "1.0.0",
-  "description": "",
   "browserslist": [
     "since 2017-06"
   ],
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
     "build": "parcel build ./src/index.html --dist-dir=./dist",
     "debug": "parcel serve ./src/index.html --dist-dir=./dist-deb",
@@ -14,8 +14,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@parcel/transformer-inline-string": "^2.0.0-nightly.748",
-    "@parcel/transformer-sass": "^2.0.0-nightly.748",
-    "parcel": "2.0.0-nightly.746"
+    "@parcel/transformer-inline-string": "^2.0.0-nightly.751",
+    "@parcel/transformer-sass": "^2.0.0-nightly.751",
+    "parcel": "^2.0.0-nightly.749"
   }
 }
