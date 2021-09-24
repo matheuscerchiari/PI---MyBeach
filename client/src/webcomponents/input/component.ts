@@ -1,4 +1,4 @@
-import template from "./component.html";
+import template from "bundle-text:./component.html";
 
 export class HTMLXInput extends HTMLElement {
     private _root = this.attachShadow({ mode: "closed" });

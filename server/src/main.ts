@@ -88,7 +88,26 @@ async function init() {
         }
     });
 
+    
+    app.get('/login', 
+    async function (request, response) { 
+        const responseData = await db.run("SELECT * FROM usuarios WHERE email=:email AND senha=:senha", 
+        {":email": request.params.email,
+         ":senha": request.params.senha
+        });
+        
+        if (responseData == undefined) {
+            response.status(404); // Not Found
+            response.json({ error: "Pessoa não encontrada." });
+        } 
+        else {
+            response.json(responseData);
+        }   }
+);
+
+
     app.listen(8081, () => console.log("running..."));
 }
+
 
 init();

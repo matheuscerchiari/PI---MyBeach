@@ -1,12 +1,14 @@
 import template from "bundle-text:./component.html";
 import { HTMLXInput } from "../input/component";
 
-export class HTMLXForm extends HTMLElement {
+export class HTMLXFormBalneabilidade extends HTMLElement {
     private _root = this.attachShadow({ mode: "closed" });
     private _id?: number;
-    private _elNome: HTMLXInput;
-    private _elSobrenome: HTMLXInput;
-    private _elApelido: HTMLXInput;
+    private _elhoraAnalise: HTMLXInput;
+    private _eldataAnalise: HTMLXInput;
+    private _elanalise: HTMLXInput;
+    private _elobservacoes: HTMLXInput;
+    private _elid_praia: HTMLXInput;
     private _elBtSave: HTMLButtonElement;
     private _elBtDelete: HTMLButtonElement;
 
@@ -14,9 +16,11 @@ export class HTMLXForm extends HTMLElement {
         super();
         //
         this._root.innerHTML = template;
-        this._elNome = <HTMLXInput>this._root.querySelector("#nome");
-        this._elSobrenome = <HTMLXInput>this._root.querySelector("#sobrenome");
-        this._elApelido = <HTMLXInput>this._root.querySelector("#apelido");
+        this._elhoraAnalise = <HTMLXInput>this._root.querySelector("#horaAnalise");
+        this._eldataAnalise = <HTMLXInput>this._root.querySelector("#dataAnalise");
+        this._elanalise = <HTMLXInput>this._root.querySelector("#analise");
+        this._elobservacoes = <HTMLXInput>this._root.querySelector("#observacoes");
+        this._elid_praia = <HTMLXInput>this._root.querySelector("#id_praia");
         this._elBtSave = <HTMLButtonElement>this._root.querySelector(".save");
         this._elBtDelete = <HTMLButtonElement>this._root.querySelector(".delete");
         //
@@ -24,15 +28,17 @@ export class HTMLXForm extends HTMLElement {
         this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
     }
 
-    load(data: { id?: number, nome: string, sobrenome: string, apelido: string }) {
+    load(data: { id?: number, dataAnalise: string, horaAnalise: string, analise: string, observacoes: string, id_praia: string}) {
         if (data.id) {
             this._id = data.id;
             this._elBtSave.innerText = "Alterar";
             this._elBtDelete.classList.add("show");
         }
-        this._elNome.value = data.nome;
-        this._elSobrenome.value = data.sobrenome;
-        this._elApelido.value = data.apelido;
+        this._elhoraAnalise.value = data.horaAnalise;
+        this._eldataAnalise.value = data.dataAnalise;
+        this._elanalise.value = data.analise;
+        this._elobservacoes.value = data.observacoes;
+        this._elid_praia.value = data.id_praia;
     }
 
     private _action(ev: MouseEvent) {
@@ -47,9 +53,11 @@ export class HTMLXForm extends HTMLElement {
         this._elBtSave.setAttribute('disabled', "true");
 
         const data = {
-            nome: this._elNome.value,
-            sobrenome: this._elSobrenome.value,
-            apelido: this._elApelido.value
+            horaAnalise: this._elhoraAnalise.value,
+            dataAnalise: this._eldataAnalise.value,
+            analise: this._elanalise.value,
+            observacoes: this._elobservacoes.value,
+            id_praia: this._elid_praia.value,
         };
 
         const configReq = {
@@ -58,7 +66,7 @@ export class HTMLXForm extends HTMLElement {
             body: JSON.stringify(data)
         };
 
-        const req = await fetch("http://localhost:8081/pessoa", configReq);
+        const req = await fetch("http://localhost:8081/balneabilidade", configReq);
         const res = await req.json();
 
         if (req.status == 200) {
@@ -76,9 +84,11 @@ export class HTMLXForm extends HTMLElement {
         this._elBtSave.setAttribute('disabled', "true");
 
         const data = {
-            nome: this._elNome.value,
-            sobrenome: this._elSobrenome.value,
-            apelido: this._elApelido.value
+            horaAnalise: this._elhoraAnalise.value,
+            dataAnalise: this._eldataAnalise.value,
+            analise: this._elanalise.value,
+            observacoes: this._elobservacoes.value,
+            id_praia: this._elid_praia.value,
         };
 
         const configReq = {
@@ -87,7 +97,7 @@ export class HTMLXForm extends HTMLElement {
             body: JSON.stringify(data)
         };
 
-        const req = await fetch("http://localhost:8081/pessoa/" + this._id, configReq);
+        const req = await fetch("http://localhost:8081/balneabilidade/" + this._id, configReq);
         const res = await req.json();
 
         if (req.status == 200) {
@@ -110,7 +120,7 @@ export class HTMLXForm extends HTMLElement {
         this._elBtSave.setAttribute('disabled', "true");
 
         const configReq = { method: "delete" };
-        const req = await fetch("http://localhost:8081/pessoa/" + this._id, configReq);
+        const req = await fetch("http://localhost:8081/balneabilidade/" + this._id, configReq);
         const res = await req.json();
 
         if (req.status == 200) {
@@ -123,4 +133,4 @@ export class HTMLXForm extends HTMLElement {
     }
 }
 
-customElements.define("x-form", HTMLXForm);
+customElements.define("x-balneabilidade", HTMLXFormBalneabilidade);
