@@ -5,6 +5,7 @@ export class HTMLXFormAdvertencia extends HTMLElement {
     private _root = this.attachShadow({ mode: "closed" });
     private _id?: number;
     private _eladvertencia: HTMLXInput;
+    private _elidusuario: HTMLXInput;
     private _elBtSave: HTMLButtonElement;
     private _elBtDelete: HTMLButtonElement;
 
@@ -13,7 +14,7 @@ export class HTMLXFormAdvertencia extends HTMLElement {
         //
         this._root.innerHTML = template;
         this._eladvertencia = <HTMLXInput>this._root.querySelector("#advertencia");
-        this._eladvertencia = <HTMLXInput>this._root.querySelector("#descrição");
+        this._elidusuario = <HTMLXInput>this._root.querySelector("#id_usuario");
         this._elBtSave = <HTMLButtonElement>this._root.querySelector(".save");
         this._elBtDelete = <HTMLButtonElement>this._root.querySelector(".delete");
         //

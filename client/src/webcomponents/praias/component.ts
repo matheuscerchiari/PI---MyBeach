@@ -13,7 +13,7 @@ export class HTMLXFormPraias extends HTMLElement {
     constructor() {
         super();
         //
-      //  this.jComboBox = <HTMLDListElement>this._root.querySelector("#jComboBox");
+        //  this.jComboBox = <HTMLDListElement>this._root.querySelector("#jComboBox");
         this._root.innerHTML = template;
         this._elnome = <HTMLXInput>this._root.querySelector("#nome");
         this._elobservacoes = <HTMLXInput>this._root.querySelector("#observacoes");
@@ -24,7 +24,7 @@ export class HTMLXFormPraias extends HTMLElement {
         this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
     }
 
-    load(data: { id?: number, nome: string, observacoes: string}) {
+    load(data: { id?: number, nome: string, observacoes: string }) {
         if (data.id) {
             this._id = data.id;
             this._elBtSave.innerText = "Alterar";
@@ -32,11 +32,11 @@ export class HTMLXFormPraias extends HTMLElement {
         }
         this._elnome.value = data.nome;
         this._elobservacoes.value = data.observacoes;
-        }
-        
+    }
+
 
     //private jComboBox(){
-      //  jComboBox.setSelectedItem(this._elnome);
+    //  jComboBox.setSelectedItem(this._elnome);
     //}
     private _action(ev: MouseEvent) {
         if (this._id) {
@@ -122,6 +122,35 @@ export class HTMLXFormPraias extends HTMLElement {
 
         this._elBtSave.removeAttribute('disabled');
     }
-}
 
+//     mostraDados();
+//   async mostraDados(ev: MouseEvent) {
+
+//     const configReq = {
+//         method: "get",
+//         headers: { "Content-Type": "application/json" },
+//     };
+
+//     const req = await fetch("http://localhost:8081/praias", this._id, configReq);
+//     const res = await req.json();
+
+//     if (req.status == 200) {
+//         console.log("usuario logado")
+//         console.log("praia existente")
+//         console.log(res)
+//         const elacoesPraias = <HTMLElement>document.querySelector("#acoesPraias")
+//         elacoesPraias.innerHTML += `
+//         <x-input id="observacoes" label="observacoes"></x-input>
+//         `;
+//         this._elnome = res[1].nome;
+//         this._elobservacoes = res[2].observacoes;
+//         console.log(this._elnome);
+//         console.log(this._elobservacoes);
+//     } else {
+//         alert(res.error);
+//         return
+//     }
+
+// }
+}
 customElements.define("x-praias", HTMLXFormPraias);

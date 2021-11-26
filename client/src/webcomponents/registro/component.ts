@@ -1,5 +1,6 @@
 import template from "bundle-text:./component.html";
 import { HTMLXInput } from "../input/component";
+import "../../main.ts";
 
 export class HTMLXFormRegistro extends HTMLElement {
     private _root = this.attachShadow({ mode: "closed" });
@@ -9,7 +10,7 @@ export class HTMLXFormRegistro extends HTMLElement {
     private _elsenha: HTMLXInput;
     private _elbatalhao: HTMLXInput;
     private _elfuncao: HTMLXInput;
-    private _elUSUARIO_TIPO: HTMLXInput;
+    private _elusuario_tipo: HTMLXInput;
     private _elBtSave: HTMLButtonElement;
     private _elBtDelete: HTMLButtonElement;
 
@@ -22,7 +23,7 @@ export class HTMLXFormRegistro extends HTMLElement {
         this._elsenha = <HTMLXInput>this._root.querySelector("#senha");
         this._elbatalhao = <HTMLXInput>this._root.querySelector("#batalhao");
         this._elfuncao = <HTMLXInput>this._root.querySelector("#funcao");
-        this._elUSUARIO_TIPO = <HTMLXInput>this._root.querySelector("#USUARIO_TIPO");
+        this._elusuario_tipo = <HTMLXInput>this._root.querySelector("#usuario_tipo");
         this._elBtSave = <HTMLButtonElement>this._root.querySelector(".save");
         this._elBtDelete = <HTMLButtonElement>this._root.querySelector(".delete");
         //
@@ -30,7 +31,7 @@ export class HTMLXFormRegistro extends HTMLElement {
         this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
     }
 
-    load(data: { id?: number, nome: string, email: string, senha: string, batalhao: string, funcao: string, USUARIO_TIPO: string}) {
+    load(data: { id?: number, nome: string, email: string, senha: string, batalhao: string, funcao: string, tipo: string}) {
         if (data.id) {
             this._id = data.id;
             this._elBtSave.innerText = "Alterar";
@@ -41,8 +42,8 @@ export class HTMLXFormRegistro extends HTMLElement {
         this._elsenha.value = data.senha;
         this._elbatalhao.value = data.batalhao;
         this._elfuncao.value = data.funcao;
-        this._elUSUARIO_TIPO.value = data.USUARIO_TIPO;
-        }
+        this._elusuario_tipo.value = data.tipo;
+    }
 
     private _action(ev: MouseEvent) {
         if (this._id) {
@@ -61,9 +62,21 @@ export class HTMLXFormRegistro extends HTMLElement {
             senha: this._elsenha.value,
             batalhao: this._elbatalhao.value,
             funcao: this._elfuncao.value,
-            USUARIO_TIPO: this._elUSUARIO_TIPO.value,
+            tipo: this._elusuario_tipo.value,
         };
-
+        // if(this._elusuario_tipo.value == "0"){
+        //         //0
+        //     }else{
+        //     if(this._elusuario_tipo.value == "1"){
+        //         //1
+        //     }else{
+        //         if(this._elusuario_tipo.value == "2"){
+        //         //2
+        //         }else{
+        //         //3
+        //         }
+        //     }
+        // }
         const configReq = {
             method: "post",
             headers: { "Content-Type": "application/json" },
@@ -93,9 +106,8 @@ export class HTMLXFormRegistro extends HTMLElement {
             senha: this._elsenha.value,
             batalhao: this._elbatalhao.value,
             funcao: this._elfuncao.value,
-            USUARIO_TIPO: this._elUSUARIO_TIPO.value,
+            USUARIO_TIPO: this._elusuario_tipo.value,
         };
-
         const configReq = {
             method: "put",
             headers: { "Content-Type": "application/json" },

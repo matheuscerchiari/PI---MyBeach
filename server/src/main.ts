@@ -19,21 +19,25 @@ async function init() {
     app.get('/pessoa', async function (request, response) {
         const responseData = await db.all("SELECT * FROM pessoa");
         response.json(responseData);
-    });
+    });//pega as informações
 
-    app.post('/pessoa', async function (request, response) {
-        if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
+    app.post('/registro', async function (request, response) {
+        if (!request.body.nome || !request.body.email || !request.body.senha) {
             response.json({ error: "dados incompletos." });
             return;
-        }
-
+        }//retorna as informações
         try {
             const responseData = await db.run(
-                "INSERT INTO pessoa(nome, sobrenome, apelido) VALUES(:nome, :sobrenome, :apelido)",
+                "INSERT INTO usuarios(nome, email, senha, funcao,batalhao,tipo) VALUES(:nome,  :email, :senha,  :funcao,:batalhao,:tipo)",
                 {
                     ":nome": request.body.nome,
-                    ":sobrenome": request.body.sobrenome,
-                    ":apelido": request.body.apelido
+                    ":email": request.body.email,
+                    ":senha": request.body.senha,
+                    //                  ":nivel_usuario": request.body.nivel_usuario,
+                    //                    ":numeroXP": request.body.numeroXP,
+                    ":funcao": request.body.funcao,
+                    ":batalhao": request.body.batalhao,
+                    ":tipo": request.body.tipo,
                 }
             );
             response.json(responseData);
@@ -41,6 +45,112 @@ async function init() {
             response.json({ error: "database error", detail: e });
         }
     });
+
+    // app.get('/praias', async function (request, response) {
+    //     const responseData = await db.all("SELECT * FROM praias");
+    //     response.json(responseData);
+    // });//pega as informações
+
+    app.post('/praias', async function (request, response) {
+        if (!request.body.nome || !request.body.observacoes) {
+            response.json({ error: "dados incompletos." });
+            return;
+        }//retorna as informações
+
+        try {
+            const responseData = await db.run(
+                "INSERT INTO praias(nome, observacoes) VALUES(:nome,  :observacoes)",
+                {
+                    ":nome": request.body.nome,
+                    ":observacoes": request.body.observacoes,
+                }
+            );
+            response.json(responseData);
+        } catch (e) {
+            response.json({ error: "database error", detail: e });
+        }
+    });
+
+    app.get('/balneabilidade', async function (request, response) {
+        const responseData = await db.all("SELECT * FROM balneabilidade");
+        response.json(responseData);
+    });//pega as informações
+
+    app.post('/balneabilidade', async function (request, response) {
+        if (!request.body.dataAnalise || !request.body.horaAnalise || !request.body.analise || !request.body.observacoes || !request.body.id_praia) {
+            response.json({ error: "dados incompletos." });
+            return;
+        }//retorna as informações
+
+        try {
+            const responseData = await db.run(
+                "INSERT INTO balneabilidade(dataAnalise, horaAnalise, analise, observacoes, fk_id_praia) VALUES(:dataAnalise,  :horaAnalise, :analise, :observacoes, :id_praia)",
+                {
+                    ":dataAnalise": request.body.dataAnalise,
+                    ":horaAnalise": request.body.horaAnalise,
+                    ":analise": request.body.analise,
+                    ":observacoes": request.body.observacoes,
+                    ":id_praia": request.body.id_praia,
+                }
+            );
+            response.json(responseData);
+        } catch (e) {
+            response.json({ error: "database error", detail: e });
+        }
+    });
+
+    app.get('/boletim', async function (request, response) {
+        const responseData = await db.all("SELECT * FROM boletim_informativo");
+        response.json(responseData);
+    });//pega as informações
+
+    app.post('/boletim', async function (request, response) {
+        if (!request.body.dataEnvio || !request.body.horaEnvio || !request.body.boletimInformativo || !request.body.id_usuario || !request.body.id_praia) {
+            response.json({ error: "dados incompletos." });
+            return;
+        }//retorna as informações
+
+        try {
+            const responseData = await db.run(
+                "INSERT INTO boletim_informativo(dataEnvio, horaEnvio, boletimInformativo, fk_id_usuario, fk_id_praia) VALUES(:dataEnvio,  :horaEnvio, :boletimInformativo, :id_usuario, :id_praia)",
+                {
+                    ":dataEnvio": request.body.dataEnvio,
+                    ":horaEnvio": request.body.horaEnvio,
+                    ":boletimInformativo": request.body.boletimInformativo,
+                    ":id_usuario": request.body.id_usuario,
+                    ":id_praia": request.body.id_praia,
+                }
+            );
+            response.json(responseData);
+        } catch (e) {
+            response.json({ error: "database error", detail: e });
+        }
+    });
+
+    app.get('/advertencia', async function (request, response) {
+        const responseData = await db.all("SELECT * FROM advertencia");
+        response.json(responseData);
+    });//pega as informações
+
+    app.post('/advertencia', async function (request, response) {
+        if (!request.body.advertencia) {
+            response.json({ error: "dados incompletos." });
+            return;
+        }//retorna as informações
+
+        try {
+            const responseData = await db.run(
+                "INSERT INTO advertencia(advertencia) VALUES(:advertencia)",
+                {
+                    ":advertencia": request.body.advertencia,
+                }
+            );
+            response.json(responseData);
+        } catch (e) {
+            response.json({ error: "database error", detail: e });
+        }
+    });
+
 
     app.get('/pessoa/:id', async function (request, response) {
         const responseData = await db.get("SELECT * FROM pessoa WHERE id=? LIMIT 1", request.params.id);
@@ -51,6 +161,7 @@ async function init() {
             response.json(responseData);
         }
     });
+    
 
     app.put('/pessoa/:id', async function (request, response) {
         if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
@@ -88,26 +199,34 @@ async function init() {
         }
     });
 
-    
-    app.get('/login', 
-    async function (request, response) { 
-        const responseData = await db.run("SELECT * FROM usuarios WHERE email=:email AND senha=:senha", 
-        {":email": request.params.email,
-         ":senha": request.params.senha
-        });
-        
-        if (responseData == undefined) {
-            response.status(404); // Not Found
-            response.json({ error: "Pessoa não encontrada." });
-        } 
-        else {
-            response.json(responseData);
-        }   }
-);
+    app.post('/login',
+        async function (request, response) {
+            const responseData = await db.all("SELECT tipo FROM usuarios WHERE email=:email AND senha=:senha", {
+                ":email": request.body.email,
+                ":senha": request.body.senha,
+            })
 
+            if (responseData == undefined) {
+                response.status(404); // Not Found
+                response.json({ error: "Senha ou email incorreto" });
+                return
+            }
+
+            response.json(responseData)
+            return
+        }
+    )
+    app.get('/praias/:id', async function (request, response) {
+        const responseData = await db.all("SELECT * FROM praias WHERE id=?", request.params.id);
+
+        if (responseData == undefined) {
+            response.json({ error: "Praia não encontrada." });
+        } else {
+            response.json(responseData);
+        }
+    });
 
     app.listen(8081, () => console.log("running..."));
 }
-
 
 init();
