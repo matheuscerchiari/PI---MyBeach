@@ -64,6 +64,8 @@ export class HTMLXFormAdvertencia extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        this.remove();
+            return;
     }
 
     private async _alterar() {
@@ -91,6 +93,8 @@ export class HTMLXFormAdvertencia extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        this.remove();
+            return;
     }
 
     private async _excluir(ev: MouseEvent) {
@@ -112,6 +116,8 @@ export class HTMLXFormAdvertencia extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        this.remove();
+            return;
     }
 }
 

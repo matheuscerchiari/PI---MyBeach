@@ -72,7 +72,7 @@ export async function init() {
         CREATE TABLE IF NOT EXISTS TemAcesso (
             fk_id_usuario integer,
             fk_id_praia integer,
-            favorita boolean,
+            favorita boolean default false,
             FOREIGN KEY (fk_id_usuario) REFERENCES USUARIOS (id_usuario) ON DELETE SET NULL,
             FOREIGN KEY (fk_id_praia) REFERENCES PRAIAS (id_praia) ON DELETE SET NULL
         );
@@ -84,7 +84,7 @@ export async function init() {
             FOREIGN KEY (fk_id_advertencia) REFERENCES ADVERTENCIA (id_advertencia) ON DELETE SET NULL
         );   
         PRAGMA foreign_keys = ON;
-        `
+                `
     );
             //SELECT * FROM balneabilidade WHERE fk_id_praia = 1 ORDER BY id_balneabilidade DESC LIMIT 1; ultima alteração para a praia
 

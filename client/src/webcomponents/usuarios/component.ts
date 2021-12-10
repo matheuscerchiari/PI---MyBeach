@@ -87,6 +87,9 @@ export class HTMLXFormUsuarios extends HTMLElement {
 
         if (req.status == 200) {
             this._id = res.lastID;
+            alert("para continuar realize seu login");
+            this.remove();
+                return;
             this._elBtSave.innerText = "Alterar";
             this._elBtDelete.classList.add("show");
         } else {
@@ -94,6 +97,10 @@ export class HTMLXFormUsuarios extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        alert("para continuar realize seu login");
+        this.remove();
+            return;
+
     }
 
     private async _alterar() {

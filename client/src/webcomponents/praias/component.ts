@@ -72,6 +72,8 @@ export class HTMLXFormPraias extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        this.remove();
+            return;
     }
 
     private async _alterar() {
@@ -121,6 +123,7 @@ export class HTMLXFormPraias extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        
     }
 
 //     mostraDados();

@@ -1,197 +1,142 @@
-.borderButtonComboBox
-            {
-                border-left: #A0C0E7 1px solid;
-                border-right: #A0C0E7 1px solid;
-                border-top: #A0C0E7 1px solid;
-                border-bottom: #A0C0E7 1px solid;
-                background-color: #E2EBF5;
-            }
-            
-            .fontLabelComboBox
-            {
-                font-family:Segoe UI, Tahoma, Sans-Serif;
-                font-size:10pt;
-                color:#000000;
-            }
-            
-            .fontItemComboBox
-            {
-                font-family:Segoe UI, Tahoma, Sans-Serif;
-                font-size:10pt;
-                color:#000000;
-            }</style>
-        <blockquote>
-            <p>
-                <script>
-                    var AlignComboBox = { ToUp: 0, ToDown: 1 };
-                    function itemComboBox(text, value) {
-                        this.text = text;
-                        this.value = value;
-                    }
-                    function comboBox(id, alignPopup) {
-    this.id = id;
-    this.alignPopup = alignPopup;
-    this.items = [];//Itens.
-    this.width;//Largura do combobox.
-    this.widthList;//Largura da lista de itens.
-    this.heightList;//Altura da lista de itens.
-    this.onClick;//Evento click do botão.
-    this.onSelectitem;//Evento da seleção do item.
+import template from "bundle-text:./component.html";
+import { HTMLXInput } from "../input/component";
 
-    this.idTextTD = this.id + 'TextTD';
-    this.idImageTD = this.id + 'ImageTD';
-    this.imgArrowComboBox = 'Imagens/SetaCombo.png';
+export class HTMLXFormVerPraias extends HTMLElement {
+    private _root = this.attachShadow({ mode: "closed" });
+    private _elid_usuario = localStorage.getItem("id_usuario")
+    private _id?: number;
+    private _elidPraia: HTMLXInput;
+    private _elBtSave: HTMLButtonElement;
+    private nomePraia?: string;
+    private observacoesPraia?: string;
+    private idBalneabilidade?: number;
+    private dataAnalise?: string;
+    private horaAnalise?: string;
+    private analise?: string;
+    private observacoesBalneabilidade?: string;
+    private idBoletim?: number;
+    private dataEnvio?: string;
+    private horaEnvio?: string;
+    private boletimInformativo?: string;
+    private favorita?: boolean;
+
+    //private _jComboBox: HTMLDListElement;
+    constructor() {
+        super();
+        //
+        //  this.jComboBox = <HTMLDListElement>this._root.querySelector("#jComboBox");
+        this._root.innerHTML = template;
+        this._elidPraia = <HTMLXInput>this._root.querySelector("#idPraia");
+        this._elBtSave = <HTMLButtonElement>this._root.querySelector(".save");
+        //
+        const AcharPraia = async () => {
+            const configReq = {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            };
+            const reqPraia = await fetch("http://localhost:8081/idpraia", configReq);
+            const resPraia = await reqPraia.json();
+            console.log(resPraia)
+            resPraia.forEach((praia: any) => {
+                this._elidPraia.innerHTML += `<option value="${praia.id_praia}"> ${praia.nome} </option>`
+            });
+        }
+        AcharPraia();
+        //
+        this._elBtSave.addEventListener("click", ev => this._adicionar(ev));
+    }
+
+    load(data: { id?: number, idPraia: string }) {
+        if (data.id) {
+            this._elBtSave.innerText = "Alterar";
+        }
+        this._elidPraia.value = data.idPraia;
+    }
+
+    private async _adicionar(ev: MouseEvent) {
+        this._elBtSave.setAttribute('disabled', "true");
+
+        const data = {
+            idPraia: this._elidPraia.value,
+        };
+
+        const configReq = {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        };
+
+        const reqPraia = await fetch("http://localhost:8081/verpraia", configReq);
+        const resPraias = await reqPraia.json();
+
+        const reqFavorita = await fetch("http://localhost:8081/verfavorita", configReq);
+        const resFavorita = await reqFavorita.json();
+
+        const reqBoletim = await fetch("http://localhost:8081/verboletim", configReq);
+        const resBoletim = await reqBoletim.json();
+
+        const reqBalneabilidade = await fetch("http://localhost:8081/verbalneabilidade", configReq);
+        const resBalneabilidade = await reqBalneabilidade.json();
+        console.log(resPraias)
+        // console.log(resFavorita)
+        console.log(resBoletim)
+        console.log(resBalneabilidade)
+        this.nomePraia = resPraias[0].nome;
+        this.observacoesPraia = resPraias[0].observacoes;
+        this.idBalneabilidade = resBalneabilidade[0].id_balneabilidade;
+        this.dataAnalise = resBalneabilidade[0].dataAnalise;
+        this.horaAnalise = resBalneabilidade[0].horaAnalise;
+        this.analise = resBalneabilidade[0].analise;
+        this.observacoesBalneabilidade = resBalneabilidade[0].observacoes;
+        this.idBoletim = resBoletim[0].id_boletim;
+        this.dataEnvio = resBoletim[0].dataEnvio;
+        this.horaEnvio = resBoletim[0].horaEnvio;
+        this.boletimInformativo = resBoletim[0].boletimInformativo;
+        //this.favorita = resFavorita[0].favorita; não está pegando o false como default no banco de dados, logo não tem o que puxar
+        const elpraia = <HTMLElement>document.querySelector('#praia')
+        elpraia.innerHTML = `
+        <p> <strong> Praia </strong> </p>
+        <p> Nome: ${this.nomePraia} </p>
+        <p> Observações: ${this.observacoesPraia} </p>
+        <p> <strong> Balneabilidade </strong> </p>
+        <p> Dia Análise: ${this.dataAnalise}</p>
+        <p> Hora Análise: ${this.horaAnalise} </p>
+        <p> Análise: ${this.analise} </p>
+        <p> observações: ${this.observacoesBalneabilidade} </p>
+        <p> <strong> Ultimo Boletim Informativo do Usuário </strong> </p>
+        <p> Data Envio: ${this.dataEnvio} </p>
+        <p> Hora Envio: ${this.horaEnvio} </p>
+        <p> Boletim: ${this.boletimInformativo} </p>
+        <button class="favorita"> Favoritar </button>
+        <button class="fechar"> fechar </button>
+        <script> favorita.onclick = {
+            const datatemAcesso = {
+                id_praia: ${this._elidPraia},
+                id_usuario: ${this._elid_usuario},
+            };
+    
+            const configReqtemAcesso = {
+                method: "post",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datatemAcesso)
+            };
+    
+            console.log(datatemAcesso)
+            const reqtemAcesso = await fetch("http://localhost:8081/temacesso", configReqtemAcesso);
+            const restemAcesso = await reqtemAcesso.json();
+            console.log(datatemAcesso)
+        }
+        fechar.onclick{
+            this.remove(${elpraia.innerHTML});
+            return;
+        }
+        `
+        this.remove();
+        return;
+            
+    }
+        
+        
 }
-comboBox.prototype.addItem = function (text, value) {
-    this.items[this.items.length] = new itemComboBox(text, value);
-};
+customElements.define("x-verpraias", HTMLXFormVerPraias);
 
-comboBox.prototype.removeItem = function (index) {
-    return this.items.splice(index, 1);
-};
-
-comboBox.prototype.getItem = function (index) {
-    return this.items[index];
-};
-
-comboBox.prototype.clearItem = function (index) {
-    this.items = [];
-};
-comboBox.prototype.changeSelectionItem = function (text, value) {
-    document.getElementById('value' + this.id).innerHTML = text;
-
-    if (this.onSelectitem != null) {
-        this.onSelectitem(new itemComboBox(text, value));
-    }
-
-    this.hideDivCombox();
-};
-
-comboBox.prototype.button_OnClick = function () {
-    var obj = document.getElementById(this.id + 'ListDIV');
-
-    if (obj.style.display != 'block') {
-
-        if (this.onClick != null) {
-            this.onClick();
-        }
-
-        if (this.alignPopup == AlignComboBox.ToUp) {
-            var objImg = document.getElementById('upImgPosition' + this.id);
-
-            obj.style.top = (objImg.offsetTop - parseInt(obj.style.height) - 2) + 'px';
-        }
-        else {
-            var objImg = document.getElementById('downImgPosition' + this.id);
-
-            obj.style.top = (objImg.offsetTop + 2) + 'px';
-        }
-
-        obj.style.display = 'block';
-    }
-    else {
-        this.hideDivCombox();
-    }
-};
-
-comboBox.prototype.hideDivCombox = function () {
-    document.getElementById(this.id + 'ListDIV').style.display = 'none';
-};
-
-comboBox.prototype.selectionComboBox = function () {
-    var objTextTD = document.getElementById(this.idTextTD);
-    var objImageTD = document.getElementById(this.idImageTD);
-
-    objTextTD.style.borderBottomColor = "#FFCD4A";
-    objTextTD.style.borderTopColor = "#FFCD4A";
-    objTextTD.style.borderLeftColor = "#FFCD4A";
-    objTextTD.style.borderRightColor = "#FFCD4A";
-
-    objImageTD.style.backgroundColor = "#FFE6A0";
-    objImageTD.style.borderBottomColor = "#FFCD4A";
-    objImageTD.style.borderTopColor = "#FFCD4A";
-    objImageTD.style.borderLeftColor = "#FFCD4A";
-    objImageTD.style.borderRightColor = "#FFCD4A";
-};
-
-comboBox.prototype.deSelectionComboBox = function () {
-    var objTextTD = document.getElementById(this.idTextTD);
-    var objImageTD = document.getElementById(this.idImageTD);
-
-    objTextTD.style.borderBottomColor = "";
-    objTextTD.style.borderTopColor = "";
-    objTextTD.style.borderLeftColor = "";
-    objTextTD.style.borderRightColor = "";
-
-    objImageTD.style.backgroundColor = "";
-    objImageTD.style.borderBottomColor = "";
-    objImageTD.style.borderTopColor = "";
-    objImageTD.style.borderLeftColor = "";
-    objImageTD.style.borderRightColor = "";
-};
-
-comboBox.prototype.itemSelectionComboBox = function (elemento) {
-    elemento.style.backgroundColor = "#FFE6A0";
-};
-
-comboBox.prototype.deItemSelectionComboBox = function (elemento) {
-    elemento.style.backgroundColor = "";
-};
-comboBox.prototype.createComboBox = function (recipientElemento) {
-    var valueTable = '';
-
-    valueTable += '<Table cellpadding="0" cellspacing="0" border="0" width="'
-    + parseInt(this.width) + 'px">';
-    valueTable += '    <tr>';
-    valueTable += '        <td id="' + this.idTextTD + '" style="width:'
-    + (parseInt(this.width) - 10) + 'px;" class="borderButtonComboBox"';
-    valueTable += ' onclick="' + this.id + '.button_OnClick();" onmouseover="'
-    + this.id + '.selectionComboBox();" onmouseout="' + this.id + '.deSelectionComboBox();" >';
-    valueTable += '            <img id="upImgPosition' + this.id + '"
-    style="position:absolute;visibility:hidden;" alt="" src="' +
-    this.imgArrowComboBox + '" />  \r\n';
-    valueTable += ' <label id="value' + this.id + '" class="fontLabelComboBox"
-    style="width:100%"> </label>';
-    valueTable += '        </td>';
-    valueTable += '        <td id="' + this.idImageTD + '"
-    style="width:10px;" align="center" class="borderButtonComboBox"';
-    valueTable += ' onclick="' + this.id + '.button_OnClick();"
-    onmouseover="' + this.id + '.selectionComboBox();" onmouseout="'
-    + this.id + '.deSelectionComboBox();" >';
-    valueTable += '            <img alt="" src="' + this.imgArrowComboBox + '" />';
-    valueTable += '        </td>';
-    valueTable += '    </tr>';
-    valueTable += '    <tr>';
-    valueTable += '        <td colspan="2">';
-    valueTable += '             <img id="downImgPosition'
-    + this.id + '" style="position:absolute;visibility:hidden;"
-    alt="" src="' + this.imgArrowComboBox + '" />';
-    valueTable += '             <div id="' + this.id + 'ListDIV"
-    style="position:absolute;width:' + parseInt(this.widthList)
-    + 'px;height:' + parseInt(this.heightList) + 'px;display:none;overflow-
-y:auto;top:0;" class="borderButtonComboBox">';
-    valueTable += '                 <Table cellpadding="0"
-    cellspacing="0" border="0" width="100%">';
-
-    for (var i = 0; i < this.items.length; i++) {
-        valueTable += '                 <Tr>';
-        valueTable += '
-        <Td class="fontItemComboBox" onclick="' + this.id
-         + '.changeSelectionItem(\'' + this.getItem(i).text + '\', \''
-         + this.getItem(i).value + '\');" onmouseover="' +
-this.id + '.itemSelectionComboBox(this);" onmouseout="'
-+ this.id + '.deItemSelectionComboBox(this);">';
-        valueTable += '
-        <label > ' + this.getItem(i).text + ' </label>';
-        valueTable += '                   </Td>';
-        valueTable += '                 </Tr>';
-    }
-
-    valueTable += '                 </Table>';
-    valueTable += '             </div>';
-    valueTable += '        </td>';
-    valueTable += '    </tr>';
-    valueTable += '</Table>';
-
-    recipientElemento.innerHTML = valueTable;
-};

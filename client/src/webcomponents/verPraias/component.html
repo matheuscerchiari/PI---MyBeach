@@ -1,33 +1,9 @@
-<link rel="stylesheet" href="../component.scss"> 
-<html>
-<head>
-    <title>ComboBox</title>
-    <script language="javascript" type="text/javascript" src="ComboBoxJScript.js"></script>
-    <script language="javascript" type="text/javascript">
-        var tipoComboBox;
-
-        function onLoadCombo() {
-            tipoComboBox = new comboBox('tipoComboBox', AlignComboBox.ToDown);
-
-            tipoComboBox.width = 150;
-            tipoComboBox.widthList = 150;
-            tipoComboBox.heightList = 200;
-
-            for (i = 0; i < 20; i++) {
-                tipoComboBox.addItem('Edson' + i, i);
-            }
-
-            tipoComboBox.createComboBox(document.body);
-        }
-
-        function hideAll() {
-            tipoComboBox.hideDivCombox();
-        }
-
-        document.onmouseup = hideAll;
-    </script>
-</head>
-<body onload="onLoadCombo();">
-
-</body>
-</html>
+<link rel="stylesheet" href="../component.scss">
+<main>
+    <select id="idPraia" label="idPraia">
+        
+    </select>
+    <div class="button-bar">
+        <button class="save">Entrar</button>
+    </div>
+    </main>

@@ -18,5 +18,8 @@
     "@parcel/transformer-inline-string": "^2.0.0-nightly.751",
     "@parcel/transformer-sass": "^2.0.0-nightly.751",
     "parcel": "^2.0.0-nightly.749"
+  },
+  "dependencies": {
+    "@types/express-session": "^1.17.4"
   }
 }

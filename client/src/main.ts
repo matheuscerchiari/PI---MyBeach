@@ -5,6 +5,7 @@ import "./webcomponents/login/component";
 import { HTMLXFormRegistro } from "./webcomponents/registro/component";
 import { HTMLXFormLogin } from "./webcomponents/login/component";
 
+
 const elMain = <HTMLElement>document.querySelector('main');
 const elBtNewRegistro = <HTMLButtonElement>document.querySelector('.new-registro');
 const elBtNewLogin = <HTMLButtonElement>document.querySelector('.new-login');

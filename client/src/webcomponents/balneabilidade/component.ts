@@ -24,6 +24,20 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
         this._elBtSave = <HTMLButtonElement>this._root.querySelector(".save");
         this._elBtDelete = <HTMLButtonElement>this._root.querySelector(".delete");
         //
+        const AcharPraia = async () => {
+            const configReq = {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            };
+            const reqPraia = await fetch("http://localhost:8081/idpraia", configReq);
+            const resPraia = await reqPraia.json();
+            console.log(resPraia)
+            resPraia.forEach((praia: any) => {
+                this._elid_praia.innerHTML += `<option value="${praia.id_praia}"> ${praia.nome} </option>`
+            });
+        } 
+        AcharPraia();
+        //
         this._elBtSave.addEventListener("click", ev => this._action(ev));
         this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
     }
@@ -78,6 +92,8 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        this.remove();
+            return;
     }
 
     private async _alterar() {
@@ -109,6 +125,8 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        this.remove();
+            return;
     }
 
     private async _excluir(ev: MouseEvent) {
@@ -130,6 +148,8 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
         }
 
         this._elBtSave.removeAttribute('disabled');
+        this.remove();
+            return;
     }
 }
 
