@@ -316,7 +316,7 @@ async function init() {
         try {
             const responseData = await db.all(
                 `SELECT 
-                    praias.nome, praias.observacoes
+                    praias.nome, praias.observacoes, praias.id_praia
                 FROM 
                     praias WHERE 
                     id_praia = :idPraia `,
@@ -346,7 +346,7 @@ async function init() {
                 FROM 
                 praias join boletim_informativo ON (boletim_informativo.fk_id_praia = praias.id_praia)
                 WHERE 
-                    id_praia = :idPraia `,
+                    id_praia = :idPraia order by id_boletim desc limit 1 `,
                 {
                     ":idPraia": request.body.idPraia,
                 }
@@ -374,7 +374,7 @@ async function init() {
                 FROM 
                    praias join balneabilidade ON (balneabilidade.fk_id_praia = praias.id_praia)
                            WHERE 
-                    id_praia = :idPraia `,
+                    id_praia = :idPraia order by id_balneabilidade desc limit 1`,
                 {
                     ":idPraia": request.body.idPraia,
                 }
@@ -414,7 +414,6 @@ async function init() {
         if (responseData == undefined) {
             console.log(e)
             response.json({ error: "database error", detail: e });
-            console.log(e)
         } else {
             response.json(responseData);
         }
@@ -442,7 +441,7 @@ async function init() {
         }
     });
     app.post('/temacesso', async function (request, response) {
-        if (!request.body.id_praia || !request.body.id_usuario) {
+        if (!request.body.fk_id_praia || !request.body.fk_id_usuario) {
             response.json({ error: "Praia não encontrada", detail: e });
             console.log(e)
             return;
@@ -450,13 +449,13 @@ async function init() {
         try {
             const responseData = await db.run(
                 `insert into 
-                    temAcesso (id_praia, id_usuario, favorita)
+                    temAcesso(fk_id_usuario, fk_id_praia, favorita)
                 values
-                   (:id_praia, :id_usuario, true)
+                   (:fk_id_usuario, :fk_id_praia, true);
                            `,
                 {
-                    ":id_praia": request.body.id_praia,
-                    ":id_usuario": request.body.id_usuario,
+                    ":fk_id_praia": request.body.fk_id_praia,
+                    ":fk_id_usuario": request.body.fk_id_usuario,
                 }
             );
             response.json(responseData);

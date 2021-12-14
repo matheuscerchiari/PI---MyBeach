@@ -1,5 +1,7 @@
+import "../favorita/component";
 import template from "bundle-text:./component.html";
 import { HTMLXInput } from "../input/component";
+import { HTMLXFormFavorita } from "../favorita/component";
 
 export class HTMLXFormVerPraias extends HTMLElement {
     private _root = this.attachShadow({ mode: "closed" });
@@ -19,6 +21,7 @@ export class HTMLXFormVerPraias extends HTMLElement {
     private horaEnvio?: string;
     private boletimInformativo?: string;
     private favorita?: boolean;
+
 
     //private _jComboBox: HTMLDListElement;
     constructor() {
@@ -92,51 +95,41 @@ export class HTMLXFormVerPraias extends HTMLElement {
         this.dataEnvio = resBoletim[0].dataEnvio;
         this.horaEnvio = resBoletim[0].horaEnvio;
         this.boletimInformativo = resBoletim[0].boletimInformativo;
+        localStorage.setItem("id_praia", resPraias[0].id_praia);
         //this.favorita = resFavorita[0].favorita; não está pegando o false como default no banco de dados, logo não tem o que puxar
         const elpraia = <HTMLElement>document.querySelector('#praia')
+        const elMain = <HTMLElement>document.querySelector('main')
+        elpraia.className = "praia"
         elpraia.innerHTML = `
-        <p> <strong> Praia </strong> </p>
-        <p> Nome: ${this.nomePraia} </p>
-        <p> Observações: ${this.observacoesPraia} </p>
-        <p> <strong> Balneabilidade </strong> </p>
-        <p> Dia Análise: ${this.dataAnalise}</p>
-        <p> Hora Análise: ${this.horaAnalise} </p>
-        <p> Análise: ${this.analise} </p>
-        <p> observações: ${this.observacoesBalneabilidade} </p>
-        <p> <strong> Ultimo Boletim Informativo do Usuário </strong> </p>
-        <p> Data Envio: ${this.dataEnvio} </p>
-        <p> Hora Envio: ${this.horaEnvio} </p>
-        <p> Boletim: ${this.boletimInformativo} </p>
-        <button class="favorita"> Favoritar </button>
-        <button class="fechar"> fechar </button>
-        <script> favorita.onclick = {
-            const datatemAcesso = {
-                id_praia: ${this._elidPraia},
-                id_usuario: ${this._elid_usuario},
-            };
-    
-            const configReqtemAcesso = {
-                method: "post",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(datatemAcesso)
-            };
-    
-            console.log(datatemAcesso)
-            const reqtemAcesso = await fetch("http://localhost:8081/temacesso", configReqtemAcesso);
-            const restemAcesso = await reqtemAcesso.json();
-            console.log(datatemAcesso)
-        }
-        fechar.onclick{
-            this.remove(${elpraia.innerHTML});
-            return;
-        }
+            <p> <strong> Praia </strong> </p>
+            <p> Nome: ${this.nomePraia} </p>
+            <p> Observações: ${this.observacoesPraia} </p>
+            <p> <strong> Balneabilidade </strong> </p>
+            <p> Dia Análise: ${this.dataAnalise}</p>
+            <p> Hora Análise: ${this.horaAnalise} </p>
+            <p> Análise: ${this.analise} </p>
+            <p> observações: ${this.observacoesBalneabilidade} </p>
+            <p> <strong> Ultimo Boletim Informativo do Usuário </strong> </p>
+            <p> Data Envio: ${this.dataEnvio} </p>
+            <p> Hora Envio: ${this.horaEnvio} </p>
+            <p> Boletim: ${this.boletimInformativo} </p>
+            <button class="new-favorita">Favorita</button>
+            <button class="fechar"> fechar </button>
         `
+
+        const fechar = <HTMLElement>elpraia.querySelector(".fechar")
+        fechar.addEventListener("click", () => {
+            fechar.closest(".praia")?.remove()
+        })
+
+
+        document.querySelector('.new-favorita')?.addEventListener('click', el => elMain.append(document.createElement("x-favorita")))
         this.remove();
         return;
-            
+
     }
-        
-        
+
+
 }
 customElements.define("x-verpraias", HTMLXFormVerPraias);
 

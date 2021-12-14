@@ -16,7 +16,7 @@ import { HTMLXFormPraias } from "../praias/component";
 import { HTMLXFormRecebe } from "../recebe/component";
 import { HTMLXFormVerPraias } from "../verPraias/component";
 import { HTMLXFormMudaTipo } from "../mudaTipo/component";
-//ver como mostrar erro de id inexistente para praias 
+
 export class HTMLXFormLogin extends HTMLElement {
     private _root = this.attachShadow({ mode: "closed" });
     private _id?: number;
@@ -70,7 +70,6 @@ export class HTMLXFormLogin extends HTMLElement {
             alert(res.error);
             return
         }
-        const elstyle = <HTMLElement>document.querySelector("#style")
         const elAcoes = <HTMLElement>document.querySelector("#acoes")
         const elMain = <HTMLElement>document.querySelector('main')
         const elacoesPraias = <HTMLElement>document.querySelector('#acoesPraias')
@@ -94,14 +93,6 @@ export class HTMLXFormLogin extends HTMLElement {
 
             `
             document.querySelector('.new-verpraias')?.addEventListener('click', el => elMain.append(document.createElement("x-verpraias")))
-        
-            // elstyle.innerHTML +=`
-            // <style>
-            // body{
-            //     background-image: url(${imagemMapa});
-            //     background-repeat: no-repeat;
-            // } </style>
-            // `
                 this.remove();
                 return;
             
@@ -113,27 +104,23 @@ export class HTMLXFormLogin extends HTMLElement {
                 <button class="new-balneabilidade">Nova balneabilidade</button>`
             document.querySelector('.new-boletim')?.addEventListener('click', el => elMain.append(document.createElement("x-boletim")))
             document.querySelector('.new-balneabilidade')?.addEventListener('click', el => elMain.append(document.createElement("x-balneabilidade")))
-            // elstyle.innerHTML +=`
-            // <style>body{
-            //     background-image: url(${imagemMapa});
-            //     background-repeat: no-repeat;
-            // } </style>
-            // `
-            
-                this.remove();
+            elacoesPraias.innerHTML += `
+            <button class="new-verpraias">Ver Praias</button>
+
+            `
+            document.querySelector('.new-verpraias')?.addEventListener('click', el => elMain.append(document.createElement("x-verpraias")))    
+            this.remove();
                 return;
             
         }
 
         elAcoes.innerHTML += `<button class="new-boletim">Novo boletim</button>`
         document.querySelector('.new-boletim')?.addEventListener('click', el => elMain.append(document.createElement("x-boletim")))
-        // elstyle.innerHTML +=`
-        //     <style>body{
-        //         background-image: url(${imagemMapa});
-        //         background-repeat: no-repeat;
-        //     } </style>
-        //     `
-        
+        elacoesPraias.innerHTML += `
+        <button class="new-verpraias">Ver Praias</button>
+
+        `
+        document.querySelector('.new-verpraias')?.addEventListener('click', el => elMain.append(document.createElement("x-verpraias")))
            this.remove();
             return;
         
