@@ -32,29 +32,16 @@ export class HTMLXFormMudaTipo extends HTMLElement {
         }
         AcharUsuario();
         //
-        this._elBtSave.addEventListener("click", ev => this._action(ev));
+        this._elBtSave.addEventListener("click", ev => this._adicionar(ev));
         this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
     }
 
     load(data: { id?: number, tipo: string, id_usuario:string }){
-        if (data.id) {
-            this._id = data.id;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
-        }
         this._elusuario_tipo.value = data.tipo;
         this._elidusuario.value = data.id_usuario;
     }
 
-    private _action(ev: MouseEvent) {
-        if (this._id) {
-            this._alterar();
-        } else {
-            this._adicionar();
-        }
-    }
-
-    private async _adicionar() {
+     private async _adicionar(ev:MouseEvent) {
         this._elBtSave.setAttribute('disabled', "true");
 
         const data = {
@@ -73,8 +60,6 @@ export class HTMLXFormMudaTipo extends HTMLElement {
 
         if (req.status == 200) {
             this._id = res.lastID;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
         } else {
             alert(res.error);
             
@@ -85,53 +70,10 @@ export class HTMLXFormMudaTipo extends HTMLElement {
             return;
     }
 
-    private async _alterar() {
-        this._elBtSave.setAttribute('disabled', "true");
-
-        const data = {
-            tipo: this._elusuario_tipo.value,
-            id_usuario: this._elidusuario.value,
-        };
-
-        const configReq = {
-            method: "put",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        };
-
-        const req = await fetch("http://localhost:8081/mudatipo/" + this._id, configReq);
-        const res = await req.json();
-
-        if (req.status == 200) {
-            this._id = res.lastID;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
-        } else {
-            alert(res.error);
-        }
-
-        this._elBtSave.removeAttribute('disabled');
-    }
-
     private async _excluir(ev: MouseEvent) {
-        if (!this._id) {
-            this.remove();
+        this._elBtSave.removeAttribute('disabled');    
+        this.remove();
             return;
-        }
-
-        this._elBtSave.setAttribute('disabled', "true");
-
-        const configReq = { method: "delete" };
-        const req = await fetch("http://localhost:8081/mudatipo/" + this._id, configReq);
-        const res = await req.json();
-
-        if (req.status == 200) {
-            this.remove();
-        } else {
-            alert(res.error);
-        }
-
-        this._elBtSave.removeAttribute('disabled');
     }
 }
 

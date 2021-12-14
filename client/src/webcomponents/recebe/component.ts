@@ -45,29 +45,16 @@ export class HTMLXFormRecebe extends HTMLElement {
         } 
         AcharAdvertencia();
         //
-        this._elBtSave.addEventListener("click", ev => this._action(ev));
+        this._elBtSave.addEventListener("click", ev => this._adicionar(ev));
         this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
     }
 
     load(data: { id?: number, fk_id_advertencia: string, fk_id_usuario:string }){
-        if (data.id) {
-            this._id = data.id;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
-        }
         this._elidadvertencia.value = data.fk_id_advertencia;
         this._elidusuario.value = data.fk_id_usuario;
     }
 
-    private _action(ev: MouseEvent) {
-        if (this._id) {
-            this._alterar();
-        } else {
-            this._adicionar();
-        }
-    }
-
-    private async _adicionar() {
+    private async _adicionar(ev:MouseEvent) {
         this._elBtSave.setAttribute('disabled', "true");
 
         const data = {
@@ -86,8 +73,6 @@ export class HTMLXFormRecebe extends HTMLElement {
 
         if (req.status == 200) {
             this._id = res.lastID;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
         } else {
             alert(res.error);
         }
@@ -96,54 +81,10 @@ export class HTMLXFormRecebe extends HTMLElement {
         this.remove();
             return;
     }
-
-    private async _alterar() {
-        this._elBtSave.setAttribute('disabled', "true");
-
-        const data = {
-            fk_id_advertencia: this._elidadvertencia.value,
-            fk_id_usuario: this._elidusuario.value,
-        };
-
-        const configReq = {
-            method: "put",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        };
-
-        const req = await fetch("http://localhost:8081/recebe/" + this._id, configReq);
-        const res = await req.json();
-
-        if (req.status == 200) {
-            this._id = res.lastID;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
-        } else {
-            alert(res.error);
-        }
-
-        this._elBtSave.removeAttribute('disabled');
-    }
-
     private async _excluir(ev: MouseEvent) {
-        if (!this._id) {
+        this._elBtSave.removeAttribute('disabled');
             this.remove();
             return;
-        }
-
-        this._elBtSave.setAttribute('disabled', "true");
-
-        const configReq = { method: "delete" };
-        const req = await fetch("http://localhost:8081/recebe/" + this._id, configReq);
-        const res = await req.json();
-
-        if (req.status == 200) {
-            this.remove();
-        } else {
-            alert(res.error);
-        }
-
-        this._elBtSave.removeAttribute('disabled');
     }
 }
 

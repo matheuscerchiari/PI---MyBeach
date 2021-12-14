@@ -31,14 +31,14 @@ async function init() {
     app.get('/pessoa', async function (request, response) {
         const responseData = await db.all("SELECT * FROM pessoa");
         response.json(responseData);
-    });//pega as informações
+    });
 
     app.post('/registro', async function (request, response) {
         if (!request.body.nome || !request.body.email || !request.body.senha) {
             response.json({ error: "dados incompletos.", detail: e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
         try {
             const responseData = await db.run(
                 "INSERT INTO usuarios(nome, email, senha, funcao,batalhao) VALUES(:nome,  :email, :senha,  :funcao,:batalhao)",
@@ -46,11 +46,8 @@ async function init() {
                     ":nome": request.body.nome,
                     ":email": request.body.email,
                     ":senha": request.body.senha,
-                    //                  ":nivel_usuario": request.body.nivel_usuario,
-                    //                    ":numeroXP": request.body.numeroXP,
                     ":funcao": request.body.funcao,
-                    ":batalhao": request.body.batalhao,
-                    //":tipo": request.body.tipo, retirei para teste 
+                    ":batalhao": request.body.batalhao
                 }
             );
             response.json(responseData);
@@ -60,18 +57,12 @@ async function init() {
         }
     });
 
-
-    // app.get('/praias', async function (request, response) {
-    //     const responseData = await db.all("SELECT * FROM praias");
-    //     response.json(responseData);
-    // });//pega as informações
-
     app.post('/praias', async function (request, response) {
         if (!request.body.nome || !request.body.observacoes) {
             response.json({ error: "dados incompletos.", detail: e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
 
         try {
             const responseData = await db.run(
@@ -91,15 +82,14 @@ async function init() {
     app.get('/balneabilidade', async function (request, response) {
         const responseData = await db.all("SELECT * FROM balneabilidade");
         response.json(responseData);
-    });//pega as informações
+    });
 
     app.post('/balneabilidade', async function (request, response) {
         if (!request.body.dataAnalise || !request.body.horaAnalise || !request.body.analise || !request.body.observacoes || !request.body.id_praia) {
             response.json({ error: "dados incompletos.", detail:e });
             console.log(e)
             return;
-        }//retorna as informações
-
+        }
         try {
             const responseData = await db.run(
                 "INSERT INTO balneabilidade(dataAnalise, horaAnalise, analise, observacoes, fk_id_praia) VALUES(:dataAnalise,  :horaAnalise, :analise, :observacoes, :id_praia)",
@@ -121,14 +111,14 @@ async function init() {
     app.get('/boletim', async function (request, response) {
         const responseData = await db.all("SELECT * FROM boletim_informativo");
         response.json(responseData);
-    });//pega as informações
+    });
 
     app.post('/boletim', async function (request, response) {
         if (!request.body.dataEnvio || !request.body.horaEnvio || !request.body.boletimInformativo || !request.body.id_usuario || !request.body.id_praia) {
             response.json({ error: "dados incompletos.", detail:e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
 
         try {
             const responseData = await db.run(
@@ -151,14 +141,14 @@ async function init() {
     app.get('/advertencia', async function (request, response) {
         const responseData = await db.all("SELECT * FROM advertencia");
         response.json(responseData);
-    });//pega as informações
+    });
 
     app.post('/advertencia', async function (request, response) {
         if (!request.body.advertencia) {
             response.json({ error: "dados incompletos.", detail: e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
 
         try {
             const responseData = await db.run(
@@ -177,14 +167,14 @@ async function init() {
     app.get('/recebe', async function (request, response) {
         const responseData = await db.all("SELECT * FROM recebe");
         response.json(responseData);
-    });//pega as informações
+    });
 
     app.post('/recebe', async function (request, response) {
         if (!request.body.fk_id_advertencia) {
             response.json({ error: "dados incompletos.", detail:e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
 
         try {
             const responseData = await db.run(
@@ -201,54 +191,6 @@ async function init() {
         }
     });
 
-
-    // app.get('/pessoa/:id', async function (request, response) {
-    //     const responseData = await db.get("SELECT * FROM pessoa WHERE id=? LIMIT 1", request.params.id);
-
-    //     if (responseData == undefined) {
-    //         response.json({ error: "Pessoa não encontrada." });
-    //     } else {
-    //         response.json(responseData);
-    //     }
-    // });
-    
-
-    // app.put('/pessoa/:id', async function (request, response) {
-    //     if (!request.body.nome || !request.body.sobrenome || !request.body.apelido) {
-    //         response.json({ error: "dados incompletos." });
-    //         return;
-    //     }
-
-    //     try {
-    //         const responseData = await db.run(
-    //             "UPDATE pessoa SET nome=:nome, sobrenome=:sobrenome, apelido=:apelido WHERE id=:id",
-    //             {
-    //                 ":id": request.params.id,
-    //                 ":nome": request.body.nome,
-    //                 ":sobrenome": request.body.sobrenome,
-    //                 ":apelido": request.body.apelido
-    //             }
-    //         );
-
-    //         if (responseData == undefined) {
-    //             response.json({ error: "Pessoa não encontrada." });
-    //         } else {
-    //             response.json(responseData);
-    //         }
-    //     } catch (e) {
-    //         response.json({ error: "database error", detail: e });
-    //     }
-    // });
-
-    // app.delete('/pessoa/:id', async function (request, response) {
-    //     const responseData = await db.run("DELETE FROM pessoa WHERE id=?", request.params.id);
-    //     if (responseData.changes == 0) {
-    //         response.json({ error: "Pessoa não encontrada." });
-    //     } else {
-    //         response.json(responseData);
-    //     }
-    // });
-
     app.post('/login',
         async function (request, response) {
             const responseData = await db.all("SELECT tipo, id_usuario FROM usuarios WHERE email=:email AND senha=:senha", {
@@ -257,7 +199,7 @@ async function init() {
             })
 
             if (responseData == undefined) {
-                response.status(404); // Not Found
+                response.status(404); 
                 response.json({ error: "Senha ou email incorreto", detail: e });
                 console.log(e)
                 return
@@ -292,7 +234,7 @@ async function init() {
             response.json({ error: "dados incompletos.", detail:e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
         try {
             const responseData = await db.run(
                 "UPDATE usuarios SET tipo = :tipo WHERE id_usuario = :id_usuario",
@@ -312,7 +254,7 @@ async function init() {
             response.json({ error: "Praia não encontrada", detail: e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
         try {
             const responseData = await db.all(
                 `SELECT 
@@ -335,7 +277,7 @@ async function init() {
             response.json({ error: "Praia não encontrada", detail: e });
             console.log(e);
             return;
-        }//retorna as informações
+        }
         try {
             const responseData = await db.all(
                 `SELECT 
@@ -362,7 +304,7 @@ async function init() {
             response.json({ error: "Praia não encontrada", detail: e });
             console.log(e);
             return;
-        }//retorna as informações
+        }
         try {
             const responseData = await db.all(
                 `SELECT 
@@ -375,30 +317,6 @@ async function init() {
                    praias join balneabilidade ON (balneabilidade.fk_id_praia = praias.id_praia)
                            WHERE 
                     id_praia = :idPraia order by id_balneabilidade desc limit 1`,
-                {
-                    ":idPraia": request.body.idPraia,
-                }
-            );
-            response.json(responseData);
-        } catch (e) {
-            console.log(e)
-            response.json({ error: "database error", detail: e });
-        }
-    });
-    app.post('/verfavorita', async function (request, response) {
-        if (!request.body.idPraia) {
-            response.json({ error: "Praia não encontrada", detail: e });
-            console.log(e)
-            return;
-        }//retorna as informações
-        try {
-            const responseData = await db.all(
-                `SELECT 
-                    favorita  
-                FROM 
-                   praias join temAcesso ON (temAcesso.fk_id_praia = praias.id_praia)
-                           WHERE 
-                    id_praia = :idPraia `,
                 {
                     ":idPraia": request.body.idPraia,
                 }
@@ -445,7 +363,7 @@ async function init() {
             response.json({ error: "Praia não encontrada", detail: e });
             console.log(e)
             return;
-        }//retorna as informações
+        }
         try {
             const responseData = await db.run(
                 `insert into 

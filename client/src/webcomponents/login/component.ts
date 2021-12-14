@@ -8,7 +8,7 @@ import "../recebe/component";
 import "../mudaTipo/component";
 import "../verPraias/component";
 import template from "bundle-text:./component.html";
-import { HTMLXInput } from "../input/component";//salva as informações inseridas
+import { HTMLXInput } from "../input/component";
 import { HTMLXFormBalneabilidade } from "../balneabilidade/component";
 import { HTMLXFormAdvertencia } from "../advertencia/component";
 import { HTMLXFormBoletim } from "../boletim_informativo/component";

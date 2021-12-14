@@ -22,12 +22,9 @@ export class HTMLXFormVerPraias extends HTMLElement {
     private boletimInformativo?: string;
     private favorita?: boolean;
 
-
-    //private _jComboBox: HTMLDListElement;
     constructor() {
         super();
         //
-        //  this.jComboBox = <HTMLDListElement>this._root.querySelector("#jComboBox");
         this._root.innerHTML = template;
         this._elidPraia = <HTMLXInput>this._root.querySelector("#idPraia");
         this._elBtSave = <HTMLButtonElement>this._root.querySelector(".save");
@@ -50,10 +47,7 @@ export class HTMLXFormVerPraias extends HTMLElement {
     }
 
     load(data: { id?: number, idPraia: string }) {
-        if (data.id) {
-            this._elBtSave.innerText = "Alterar";
-        }
-        this._elidPraia.value = data.idPraia;
+                this._elidPraia.value = data.idPraia;
     }
 
     private async _adicionar(ev: MouseEvent) {
@@ -72,18 +66,11 @@ export class HTMLXFormVerPraias extends HTMLElement {
         const reqPraia = await fetch("http://localhost:8081/verpraia", configReq);
         const resPraias = await reqPraia.json();
 
-        const reqFavorita = await fetch("http://localhost:8081/verfavorita", configReq);
-        const resFavorita = await reqFavorita.json();
-
         const reqBoletim = await fetch("http://localhost:8081/verboletim", configReq);
         const resBoletim = await reqBoletim.json();
 
         const reqBalneabilidade = await fetch("http://localhost:8081/verbalneabilidade", configReq);
         const resBalneabilidade = await reqBalneabilidade.json();
-        console.log(resPraias)
-        // console.log(resFavorita)
-        console.log(resBoletim)
-        console.log(resBalneabilidade)
         this.nomePraia = resPraias[0].nome;
         this.observacoesPraia = resPraias[0].observacoes;
         this.idBalneabilidade = resBalneabilidade[0].id_balneabilidade;
@@ -96,7 +83,6 @@ export class HTMLXFormVerPraias extends HTMLElement {
         this.horaEnvio = resBoletim[0].horaEnvio;
         this.boletimInformativo = resBoletim[0].boletimInformativo;
         localStorage.setItem("id_praia", resPraias[0].id_praia);
-        //this.favorita = resFavorita[0].favorita; não está pegando o false como default no banco de dados, logo não tem o que puxar
         const elpraia = <HTMLElement>document.querySelector('#praia')
         const elMain = <HTMLElement>document.querySelector('main')
         elpraia.className = "praia"
@@ -122,13 +108,10 @@ export class HTMLXFormVerPraias extends HTMLElement {
             fechar.closest(".praia")?.remove()
         })
 
-
         document.querySelector('.new-favorita')?.addEventListener('click', el => elMain.append(document.createElement("x-favorita")))
         this.remove();
         return;
-
     }
-
 
 }
 customElements.define("x-verpraias", HTMLXFormVerPraias);

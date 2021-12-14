@@ -38,16 +38,11 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
         } 
         AcharPraia();
         //
-        this._elBtSave.addEventListener("click", ev => this._action(ev));
+        this._elBtSave.addEventListener("click", ev => this._adicionar(ev));
         this._elBtDelete.addEventListener("click", ev => this._excluir(ev));
     }
 
     load(data: { id?: number, dataAnalise: string, horaAnalise: string, analise: string, observacoes: string, id_praia: string}) {
-        if (data.id) {
-            this._id = data.id;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
-        }
         this._elhoraAnalise.value = data.horaAnalise;
         this._eldataAnalise.value = data.dataAnalise;
         this._elanalise.value = data.analise;
@@ -55,15 +50,7 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
         this._elid_praia.value = data.id_praia;
     }
 
-    private _action(ev: MouseEvent) {
-        if (this._id) {
-            this._alterar();
-        } else {
-            this._adicionar();
-        }
-    }
-
-    private async _adicionar() {
+    private async _adicionar(ev:MouseEvent) {
         this._elBtSave.setAttribute('disabled', "true");
 
         const data = {
@@ -85,41 +72,6 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
 
         if (req.status == 200) {
             this._id = res.lastID;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
-        } else {
-            alert(res.error);
-        }
-
-        this._elBtSave.removeAttribute('disabled');
-        this.remove();
-            return;
-    }
-
-    private async _alterar() {
-        this._elBtSave.setAttribute('disabled', "true");
-
-        const data = {
-            horaAnalise: this._elhoraAnalise.value,
-            dataAnalise: this._eldataAnalise.value,
-            analise: this._elanalise.value,
-            observacoes: this._elobservacoes.value,
-            id_praia: this._elid_praia.value,
-        };
-
-        const configReq = {
-            method: "put",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        };
-
-        const req = await fetch("http://localhost:8081/balneabilidade/" + this._id, configReq);
-        const res = await req.json();
-
-        if (req.status == 200) {
-            this._id = res.lastID;
-            this._elBtSave.innerText = "Alterar";
-            this._elBtDelete.classList.add("show");
         } else {
             alert(res.error);
         }
@@ -130,23 +82,6 @@ export class HTMLXFormBalneabilidade extends HTMLElement {
     }
 
     private async _excluir(ev: MouseEvent) {
-        if (!this._id) {
-            this.remove();
-            return;
-        }
-
-        this._elBtSave.setAttribute('disabled', "true");
-
-        const configReq = { method: "delete" };
-        const req = await fetch("http://localhost:8081/balneabilidade/" + this._id, configReq);
-        const res = await req.json();
-
-        if (req.status == 200) {
-            this.remove();
-        } else {
-            alert(res.error);
-        }
-
         this._elBtSave.removeAttribute('disabled');
         this.remove();
             return;
